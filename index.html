@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saqib General Store - Management Tool</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ff4b8b;
+            --secondary: #ff758c;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --success: #48bb78;
+            --danger: #f56565;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --text-color: #f7fafc;
+        }
+
+        /* Blue Dark Mode */
+        body.blue-dark-mode {
+            --bg-color: #0d1b2a;
+            --card-bg: #1b263b;
+            --text-color: #e0e1dd;
+            --primary: #4ea8de;
+            --secondary: #48cae4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* App Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(255, 75, 139, 0.2);
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dashboard Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info h3 {
+            font-size: 14px;
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        .stat-info p {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 75, 139, 0.1);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        /* Main Form Section */
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 2px solid rgba(255, 75, 139, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .input-group input, .input-group select {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 75, 139, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 15px;
+            box-shadow: 0 4px 10px rgba(255, 75, 139, 0.3);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        /* Table Section */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background: rgba(255, 75, 139, 0.05);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #a0aec0;
+        }
+
+        /* Footer Branding */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+            opacity: 0.8;
+            padding-bottom: 10px;
+        }
+
+        /* Modal Settings */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .modal-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .close-modal {
+            background: #cbd5e0;
+            color: var(--dark);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <header>
+        <div>
+            <h1><i class="fa-solid fa-store"></i> Saqib General Store</h1>
+            <p style="font-size: 12px; opacity: 0.9;">Inventory & Pricing Management Tool</p>
+        </div>
+        <button class="settings-btn" onclick="toggleModal()"><i class="fa-solid fa-gear"></i> Settings</button>
+    </header>
+
+    <!-- Stats Dashboard -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-info">
+                <h3>Total Products</h3>
+                <p id="totalProductsCount">0</p>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <h3>Total Investment</h3>
+                <p id="totalInvestmentVal">Rs 0</p>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <h3>Expected Profit</h3>
+                <p id="totalProfitVal">Rs 0</p>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+    </div>
+
+    <!-- Add Item Form -->
+    <div class="card">
+        <h2><i class="fa-solid fa-circle-plus"></i> Add New Item</h2>
+        <form id="itemForm" onsubmit="addItem(event)">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Item Name</label>
+                    <input type="text" id="itemName" placeholder="e.g. Lipstick / Cream" required>
+                </div>
+                <div class="input-group">
+                    <label>Category</label>
+                    <select id="itemCategory">
+                        <option value="Cosmetics">Cosmetics</option>
+                        <option value="Skincare">Skincare</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Original Price</label>
+                    <input type="number" id="origPrice" placeholder="0.00" min="0" required oninput="calculatePreview()">
+                </div>
+                <div class="input-group">
+                    <label>Profit</label>
+                    <input type="number" id="profit" placeholder="0.00" min="0" required oninput="calculatePreview()">
+                </div>
+            </div>
+            <div style="margin-top: 15px; font-weight: 500; font-size: 14px; color: var(--success);" id="previewText">
+                Selling Price Preview: Rs 0
+            </div>
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Save Item</button>
+        </form>
+    </div>
+
+    <!-- Items Inventory List -->
+    <div class="card">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search item by name..." onkeyup="filterItems()">
+        </div>
+        <h2><i class="fa-solid fa-list"></i> Inventory List</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Original Price</th>
+                        <th>Profit</th>
+                        <th>Selling Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="itemTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Developed By Azlan Footer -->
+    <footer>
+        Developed by Azlan
+    </footer>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal" id="settingsModal">
+    <div class="modal-content">
+        <h3>App Settings</h3>
+        <div style="margin: 15px 0;">
+            <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 8px;">Select Theme Mode:</label>
+            <select id="themeSelector" onchange="changeTheme()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e0; background: var(--card-bg); color: var(--text-color);">
+                <option value="light">Light Mode</option>
+                <option value="dark">Dark Mode</option>
+                <option value="blue">Blue Dark Mode</option>
+            </select>
+        </div>
+        <button class="modal-btn" onclick="clearAllData()"><i class="fa-solid fa-trash"></i> Clear All Data</button>
+        <button class="close-modal" onclick="toggleModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    let items = JSON.parse(localStorage.getItem('saqib_items')) || [];
+
+    function saveToStorage() {
+        localStorage.setItem('saqib_items', JSON.stringify(items));
+        renderApp();
+    }
+
+    function calculatePreview() {
+        let orig = parseFloat(document.getElementById('origPrice').value) || 0;
+        let prof = parseFloat(document.getElementById('profit').value) || 0;
+        let total = orig + prof;
+        document.getElementById('previewText').innerText = `Selling Price Preview: Rs ${total.toLocaleString()}`;
+    }
+
+    function addItem(e) {
+        e.preventDefault();
+        let name = document.getElementById('itemName').value;
+        let category = document.getElementById('itemCategory').value;
+        let origPrice = parseFloat(document.getElementById('origPrice').value) || 0;
+        let profit = parseFloat(document.getElementById('profit').value) || 0;
+        let sellingPrice = origPrice + profit;
+
+        let newItem = {
+            id: Date.now(),
+            name,
+            category,
+            origPrice,
+            profit,
+            sellingPrice
+        };
+
+        items.push(newItem);
+        saveToStorage();
+        document.getElementById('itemForm').reset();
+        document.getElementById('previewText').innerText = `Selling Price Preview: Rs 0`;
+    }
+
+    function deleteItem(id) {
+        items = items.filter(item => item.id !== id);
+        saveToStorage();
+    }
+
+    function filterItems() {
+        let query = document.getElementById('searchInput').value.toLowerCase();
+        let rows = document.querySelectorAll('#itemTableBody tr');
+        rows.forEach(row => {
+            let nameText = row.children[0]?.innerText.toLowerCase() || '';
+            row.style.display = nameText.includes(query) ? '' : 'none';
+        });
+    }
+
+    function renderApp() {
+        let tbody = document.getElementById('itemTableBody');
+        tbody.innerHTML = '';
+
+        if (items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No items added yet. Start adding items above!</td></tr>`;
+        } else {
+            items.forEach(item => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${item.name}</strong></td>
+                    <td><span style="background: rgba(255,75,139,0.1); color: var(--primary); padding: 3px 8px; border-radius: 6px; font-size: 12px;">${item.category}</span></td>
+                    <td>Rs ${item.origPrice.toLocaleString()}</td>
+                    <td style="color: var(--success);">+ Rs ${item.profit.toLocaleString()}</td>
+                    <td><strong>Rs ${item.sellingPrice.toLocaleString()}</strong></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-delete" onclick="deleteItem(${item.id})"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        let totalCount = items.length;
+        let totalInv = items.reduce((sum, item) => sum + item.origPrice, 0);
+        let totalProf = items.reduce((sum, item) => sum + item.profit, 0);
+
+        document.getElementById('totalProductsCount').innerText = totalCount;
+        document.getElementById('totalInvestmentVal').innerText = `Rs ${totalInv.toLocaleString()}`;
+        document.getElementById('totalProfitVal').innerText = `Rs ${totalProf.toLocaleString()}`;
+    }
+
+    function toggleModal() {
+        let modal = document.getElementById('settingsModal');
+        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function clearAllData() {
+        if(confirm('Are you sure you want to delete all items?')) {
+            items = [];
+            saveToStorage();
+            toggleModal();
+        }
+    }
+
+    function changeTheme() {
+        let theme = document.getElementById('themeSelector').value;
+        document.body.classList.remove('dark-mode', 'blue-dark-mode');
+        
+        if (theme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else if (theme === 'blue') {
+            document.body.classList.add('blue-dark-mode');
+        }
+        
+        localStorage.setItem('saqib_theme', theme);
+    }
+
+    // Load saved theme on start
+    let savedTheme = localStorage.getItem('saqib_theme') || 'light';
+    document.getElementById('themeSelector').value = savedTheme;
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else if (savedTheme === 'blue') {
+        document.body.classList.add('blue-dark-mode');
+    }
+
+    renderApp();
+</script>
+
+</body>
+</html>
